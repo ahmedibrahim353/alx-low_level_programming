@@ -3,7 +3,9 @@
 /**
  * _puts - print a string
  *
- * @str: string pointer
+ * @s: string pointer
+ *
+ * _putchar - print  characters
  *
  * Return: nothing
 */
