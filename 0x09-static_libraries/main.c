@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * main - Entry check code
+ * main - Entry check alx code
  *
  * Return: Always 0 (success)
 */
