@@ -1,14 +1,19 @@
 #include"main.h"
 #include<string.h>
 
-/** main - print char string
+/**
+ * _strlen - count string length
  *
- *@s: string to print
+ *@s: point to char
  *
- * Return: string
+ * Return: return string length
  */
 
 int _strlen(char *s)
 {
-	return (_strlenjhfskdhfjskdjhfsfhfksdnfkdsj());
+	int i;
+
+	for (i = 0; s[i] != '\0';)
+		i++;
+			return (i);
 }
