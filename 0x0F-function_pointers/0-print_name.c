@@ -1,10 +1,11 @@
 #include<stdio.h>
 
-/*
+/**
+ * print_name - print name with a function
  *
+ *@name: name
  *
- *
- *
+ *@f: formating functions
  *
  */
 
