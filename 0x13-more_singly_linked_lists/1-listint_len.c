@@ -18,9 +18,11 @@ size_t print_listint(const listint_t *h)
 	while (h->next != NULL)
 	{
 
-		h = h->next;
+		if (h->n != '\0')
 
 		node_no++;
+
+		h = h->next;
 	}
 
 	return (node_no);
