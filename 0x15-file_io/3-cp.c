@@ -1,60 +1,103 @@
-#include<main.h>
+#include"main.h"
+
+#define BUFFER_SIZE 1024
 
 /**
- * main - function that copy.
- * @ac: numer of argument.
+ * test - function test.
+ * @ac: number of arguments.
  * @av: arguments.
- * Return: 1 on success.
+ * Return: 0 on success, 1 on failure.
  */
 
-int main(int ac, char **av)
+int test(int ac, char **av)
 {
-	int f1, f2, r1, w2, clo1, clo2;
-	char b[1024];
-
-	if (ac > 3 && ac < 2)
+	if (ac != 3)
 	{
-		dprintf(STDOUT_FILENO, "Usage: cp file_from file_to\n");
-		exit(97);
+		dprintf(STDOUT_FILENO, "Usage: %s file_from file_to\n", av[0]);
+		return (1);
 	}
+
 	if (av[1] == NULL)
 	{
 		dprintf(STDOUT_FILENO, "Error: Can't read from file %s\n", av[1]);
-		exit(98);
+		return (1);
 	}
-	else
+
+	return (0);
+}
+
+/**
+ * copyFile - function that copies a file.
+ * @source: copy from
+ * @destination: copy to
+ * Return: 0 on success.
+ */
+
+int copyFile(const char *source, const char *destination)
+{
+	int f1, f2, r1, w2;
+	char buffer[BUFFER_SIZE];
+
+	f1 = open(source, O_RDONLY);
+	if (f1 == -1)
 	{
-		f1 = open(av[1], O_RDWR);
-		r1 = read(f1, b, 1024);
-		if (r1 == -1)
-		{
-			dprintf(STDOUT_FILENO, "Error: Can't read from file %s\n", av[1]);
-			exit(98);
-		}
+		dprintf(STDOUT_FILENO, "Error: Can't read from file %s\n", source);
+		return (1);
 	}
-	f2 = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+
+	r1 = read(f1, buffer, sizeof(buffer));
+	if (r1 == -1)
+	{
+		dprintf(STDOUT_FILENO, "Error: Can't read from file %s\n", source);
+		close(f1);
+		return (1);
+	}
+
+	f2 = open(destination, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if (f2 == -1)
 	{
-		dprintf(STDOUT_FILENO, "Error: Can't read from file %s\n", av[2]);
-		exit(99);
+		dprintf(STDOUT_FILENO, "Error: Can't write to file %s\n", destination);
+		close(f1);
+		return (1);
 	}
-	w2 = write(f2, b, strlen(b));
+
+	w2 = write(f2, buffer, r1);
 	if (w2 == -1)
 	{
-		dprintf(STDOUT_FILENO, "Error: Can't read from file %s\n", av[2]);
-		exit(99);
+		dprintf(STDOUT_FILENO, "Error: Can't write to file %s\n", destination);
+		close(f1);
+		close(f2);
+		return (1);
 	}
-	clo1 = close(f1);
-	if (clo1 == -1)
+
+	if (close(f1) == -1)
 	{
-		dprintf(STDOUT_FILENO, "Error: Can't close fd %d\n", f1);
-		exit(100);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", f1);
+		perror("close");
+		return (1);
 	}
-	clo2 = close(f2);
-	if (clo2 == -1)
-	{       
-		dprintf(STDOUT_FILENO, "Error: Can't close fd %d\n", f2);
-		exit(100);
+
+	return (0);
+}
+
+
+/**
+ * main - function that copies a file.
+ * @ac: number of arguments.
+ * @av: arguments.
+ * Return: 0 on success, 1 on failure.
+ */
+int main(int ac, char **av)
+{
+	if (test(ac, av) != 0)
+	{
+		exit(1);
 	}
-	return (1);
+
+	if (copyFile(av[1], av[2]) != 0)
+	{
+		exit(1);
+	}
+
+	return (0);
 }
